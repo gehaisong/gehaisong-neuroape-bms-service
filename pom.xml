@@ -22,7 +22,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <modules>
-        <module>bms-service</module>
         <module>api</module>
+        <module>webapp</module>
+        <module>bms-service</module>
     </modules>
 </project>

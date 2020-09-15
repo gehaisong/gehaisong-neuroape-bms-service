@@ -5,12 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
 
-//import org.springframework.stereotype.Service;
-
 /**
  * Created by gehaisong
  */
-//@Service
 public interface UserService {
     public Integer insert(UserDO personDO);
     public Integer update(UserDO personDO);
