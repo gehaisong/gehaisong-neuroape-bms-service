@@ -2,6 +2,7 @@ package com.utechworld.neuroape.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface UserService {
      * @param pageSize
      * @return
      */
-    JSONObject selectAll(Integer page, Integer pageSize, String search);
+    PageInfo selectAll(Integer page, Integer pageSize, String search);
 
     /**
      * 批量插入

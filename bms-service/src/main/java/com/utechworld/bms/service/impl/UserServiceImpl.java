@@ -75,8 +75,7 @@ public class UserServiceImpl implements UserService,Serializable{
     }
 
     @Override
-    public JSONObject selectAll(Integer pageNo, Integer pageSize, String search) {
-        JSONObject jsonObject =new JSONObject();
+    public PageInfo selectAll(Integer pageNo, Integer pageSize, String search) {
         try {
             if(StringUtils.isNotBlank(search)){
                 search = "%"+search.trim()+"%";
@@ -89,12 +88,11 @@ public class UserServiceImpl implements UserService,Serializable{
                 list = userMapper.selectAllDynaSqlResultMap(search);
                 redisUtils.set(key,list,10);
             }
-            PageInfo pageInfo = new PageInfo(list);
-            jsonObject.put("pageInfo",pageInfo);
+            return new PageInfo(list);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return  jsonObject;
+        return  null;
     }
 
     @Override

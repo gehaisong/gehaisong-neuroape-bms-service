@@ -24,7 +24,6 @@
 			<groupId>com.utechworld</groupId>
 			<artifactId>neuroape-api</artifactId>
 			<version>1.0-SNAPSHOT</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -1,7 +1,7 @@
 package com.utechworld.bms.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.nacos.api.config.annotation.NacosValue;
+import com.github.pagehelper.PageInfo;
 import com.utechworld.neuroape.common.result.ResultJSON;
 import com.utechworld.neuroape.service.UserDO;
 import com.utechworld.neuroape.service.UserService;
@@ -12,9 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,48 +43,16 @@ public class TestController {
 
         return  "--d--"+host;
     }
-    @RequestMapping(value = "refresh")
-    public String refresh (HttpServletRequest request){
-        refresh();
-        return "refresh";
-    }
-    //    service服务
-    @RequestMapping("/hello")
-    public String index(@RequestParam String name) {
-        return "hello "+name+"，this is first messge";
-    }
-    /**
-     * 刷新配置中心
-     */
-    public static void refresh() {
-
-        HttpURLConnection connection =null;
-        try {
-            URL url = new URL("http://localhost:8763/refresh");//配置中心客户端刷新
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            connection.connect();//链接
-            InputStream in=connection.getInputStream();//等待响应
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            if(connection!=null){
-                connection.disconnect();
-            }
-        }
-    }
 
     /**
      * 1.分页查询
      * @return
      */
     @RequestMapping(value = "users/{pageNo}/{pageSize}", method = RequestMethod.GET)
-    public ResponseEntity getUserList (@PathVariable Integer pageNo, @PathVariable Integer pageSize){
+    public List getUserList (@PathVariable Integer pageNo, @PathVariable Integer pageSize){
         String search = "";
-        JSONObject jsonObject  = userService.selectAll(pageNo,pageSize,search);
-        return ResponseEntity.ok(jsonObject);
+        List list = userService.selectAll(pageNo,pageSize,search).getList();
+        return list;
     }
     /**
      * 2.批量插入
