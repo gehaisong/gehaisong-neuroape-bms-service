@@ -1,8 +1,8 @@
 package com.utechworld.bms.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
-import com.utechworld.neuroape.common.result.ResultJSON;
+import com.utechworld.neuroape.common.result.Result;
+import com.utechworld.neuroape.common.result.ResultPage;
 import com.utechworld.neuroape.service.UserDO;
 import com.utechworld.neuroape.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,20 +48,17 @@ public class TestController {
      * 1.分页查询
      * @return
      */
-    @RequestMapping(value = "users/{pageNo}/{pageSize}", method = RequestMethod.GET)
-    public List getUserList (@PathVariable Integer pageNo, @PathVariable Integer pageSize){
-        String search = "";
-        List list = userService.selectAll(pageNo,pageSize,search).getList();
-        return list;
+    @RequestMapping(value = "users/{pageNo}/{pageSize}/{search}", method = RequestMethod.GET)
+    public ResultPage getUserList (@PathVariable Integer pageNo, @PathVariable Integer pageSize,@PathVariable String search){
+        PageInfo page = userService.selectAll(pageNo,pageSize,search);
+        return ResultPage.ok(page.getList(),page.getPageNum(),page.getPageSize(),page.getTotal());
     }
     /**
      * 2.批量插入
      * @return
      */
     @RequestMapping(value = "add-all")
-    public ResponseEntity<ResultJSON> addAll (){
-        ResultJSON resultJSON = new ResultJSON();
-
+    public Result addAll (){
         try {
             List<UserDO> list=new ArrayList<UserDO>();
             for(int i=0;i<3;i++){
@@ -73,17 +70,16 @@ public class TestController {
                 list.add(user);
             }
             List<Integer> idList=userService.insertAll(list);
-            resultJSON.setData(idList);
+           return Result.ok(idList);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(resultJSON);
+        return Result.fail();
     }
 
     /** 3.插入 */
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public ResponseEntity<ResultJSON> add (UserDO user){
-        ResultJSON resultJSON = new ResultJSON();
+    public Result add (UserDO user){
         user.setUserId(92132384);
         user.setLibraryId(33333);
         user.setNickName("李新东方用户");
@@ -91,58 +87,55 @@ public class TestController {
         try {
             Integer id=userService.insert(user);
             user.setId(id);
-            resultJSON.setData(user);
+            Result.ok(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(resultJSON);
+        return Result.fail();
     }
 
     /** 4.主键查询 */
     @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<ResultJSON> getUserById (@PathVariable(value = "id") Integer id){
-        ResultJSON resultJSON = new ResultJSON();
+    public Result getUserById (@PathVariable(value = "id") Integer id){
         try {
             UserDO user = userService.selectById(id);
-            resultJSON.setData(user);
+            Result.ok(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(resultJSON);
+        return Result.fail();
     }
     /** 6.更新对象 */
     @RequestMapping(value = "update/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<ResultJSON> update (@PathVariable(value = "userId") Integer userId){
-        ResultJSON resultJSON = new ResultJSON();
+    public Result update (@PathVariable(value = "userId") Integer userId){
         try {
             UserDO user = new UserDO();
             user.setUserId(userId);
             user.setNickName("李批量插入-更新");
             Integer num=userService.update(user);
-            resultJSON.setData(num);
+            Result.ok(num);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(resultJSON);
+        return Result.fail();
     }
     /** 7. 删除*/
     @RequestMapping(value = "delete")
-    public ResponseEntity<ResultJSON> delete ( ){
-        ResultJSON r = new ResultJSON();
+    public Result delete ( ){
         try {
             List<Integer> idList=new ArrayList<Integer>();
             idList.add(92132385);
             idList.add(92132386);
             Integer num= userService.delete(idList);
-            r.setData(num);
+            Result.ok(num);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(r);
+        return Result.fail();
     }
     @RequestMapping(value = "/redis")
     @ResponseBody
-    public List<Integer> redisTest(){
-        return userService.redisTest();
+    public Result redisTest(){
+        return Result.ok(userService.redisTest());
     }
 }

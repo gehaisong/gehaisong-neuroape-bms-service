@@ -1,25 +1,21 @@
 package com.utechworld.webapp.controller;
 
 
+import com.utechworld.neuroape.common.result.Result;
+import com.utechworld.neuroape.common.result.ResultPage;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 /**
  * Created by gehaisong
  */
-@FeignClient(name = "neuroape-bms-service",url = "http://127.0.0.1:8800/boot")
+@FeignClient(name = "neuroape-bms-service")
 public interface TestFeignService {
 
-    @GetMapping("users/{pageNo}/{pageSize}")
-    public List getUserList (@PathVariable Integer pageNo, @PathVariable Integer pageSize);
+    @GetMapping("/boot/users/{pageNo}/{pageSize}/{search}")
+    public ResultPage getUserList (@PathVariable Integer pageNo, @PathVariable Integer pageSize,@PathVariable String search);
 
     @GetMapping(value = "/redis")
-    public List<Integer> redisTest();
+    public Result redisTest();
 }

@@ -1,6 +1,6 @@
 package com.utechworld.bms.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.utechworld.bms.common.redis.RedisUtils;
@@ -80,15 +80,16 @@ public class UserServiceImpl implements UserService,Serializable{
             if(StringUtils.isNotBlank(search)){
                 search = "%"+search.trim()+"%";
             }
-            String key ="selet-all-pageNo="+pageNo+"pageSize="+pageSize+"search="+search;
-            List<UserDO> list = (List<UserDO>) redisUtils.get(key);
-            if(CollectionUtils.isEmpty(list)){
+            String key ="selet-all-page-pageNo="+pageNo+"pageSize="+pageSize+"search="+search;
+            PageInfo pageInfo = (PageInfo) redisUtils.get(key);
+            if(pageInfo == null){
                 //使用分页插件,核心代码就这一行 #分页配置#
-                PageHelper.startPage(pageNo, pageSize);
-                list = userMapper.selectAllDynaSqlResultMap(search);
-                redisUtils.set(key,list,10);
+                Page page = PageHelper.startPage(pageNo, pageSize);
+                List<UserDO> list = userMapper.selectAllDynaSqlResultMap(search);
+                pageInfo = new PageInfo(list);
+                redisUtils.set(key,pageInfo,10);
             }
-            return new PageInfo(list);
+            return pageInfo;
         }catch (Exception e){
             e.printStackTrace();
         }

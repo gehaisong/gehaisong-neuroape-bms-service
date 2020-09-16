@@ -1,13 +1,12 @@
 package com.utechworld.webapp.controller;
 
+import com.utechworld.neuroape.common.result.ResultPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * Created by gehaisong
@@ -22,10 +21,10 @@ public class TestController {
     @Value("${name}")
     String userName;
 
-    @RequestMapping(value = "index")
-    public List index (HttpServletRequest request){
-        List list = testFeignService.getUserList(0,10);
-        return list ;
+    @RequestMapping(value = "index/{pageNo}/{pageSize}/{search}")
+    public ResultPage index (@PathVariable Integer pageNo, @PathVariable Integer pageSize,@PathVariable String search){
+        ResultPage result = testFeignService.getUserList(pageNo,pageSize,search);
+        return result ;
     }
 
 }
