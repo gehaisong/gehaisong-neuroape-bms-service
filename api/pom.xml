@@ -11,7 +11,8 @@
 
     <groupId>com.utechworld</groupId>
     <artifactId>neuroape-api</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1</version>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -37,4 +38,29 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <!-- 依赖包发布到私服，将开发的包上传到宿主仓库-->
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <name>gehaisong</name>
+            <url>http://10.10.10.201:8081/repository/ylw-hosted/</url>
+        </repository>
+    </distributionManagement>
 </project>
