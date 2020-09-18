@@ -36,10 +36,10 @@ public class UserMapperDynaSqlProvider {
         List<UserDO> insertList = (List<UserDO>) map.get("list");
         StringBuilder sb = new StringBuilder();
         sb.append("INSERT INTO sy_reading_user ");
-        sb.append("(user_id ,library_id,user_name,nick_name) ");
+        sb.append("(user_id ,user_name,nick_name) ");
         sb.append("VALUES ");
         MessageFormat mf = new MessageFormat(
-                "( #'{'list[{0}].userId},#'{'list[{0}].libraryId},#'{'list[{0}].userName},#'{'list[{0}].nickName} )");
+                "( #'{'list[{0}].userId},#'{'list[{0}].userName},#'{'list[{0}].nickName} )");
         for (int i = 0; i < insertList.size(); i++) {
             sb.append(mf.format(new Object[]{i}));
             if (i < insertList.size() - 1) {
@@ -57,7 +57,7 @@ public class UserMapperDynaSqlProvider {
     public String selectAllDynaSql(final String searchContent){
         SQL sql = new SQL(){
             {
-                SELECT(" id,user_id userId,library_id,user_name,nick_name,head_img ");
+                SELECT(" id,user_id userId,user_name,nick_name,head_img ");
                 FROM("sy_reading_user ");
                 if(!StringUtils.isEmpty(searchContent)){
                     WHERE(" nick_name like #{searchContent}");

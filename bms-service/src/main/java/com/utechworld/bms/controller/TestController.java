@@ -65,8 +65,8 @@ public class TestController {
                 UserDO user=new UserDO();
                 user.setUserId(92132385+i);
                 user.setLibraryId(33333);
-                user.setNickName("李批量插入"+i);
-                user.setUserName("李22"+i);
+                user.setNickName("nacos松"+i);
+                user.setUserName("nacos松"+i);
                 list.add(user);
             }
             List<Integer> idList=userService.insertAll(list);

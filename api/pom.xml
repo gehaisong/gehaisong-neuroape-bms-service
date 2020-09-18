@@ -11,7 +11,7 @@
 
     <groupId>com.utechworld</groupId>
     <artifactId>neuroape-api</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -62,5 +62,10 @@
             <name>gehaisong</name>
             <url>http://10.10.10.201:8081/repository/ylw-hosted/</url>
         </repository>
+         <snapshotRepository>
+             <id>snapshots</id>
+             <name>gehaisong</name>
+             <url>http://nexus.utechworld.com/repository/ylw-hosted-SNAPSHOT/</url>
+         </snapshotRepository>
     </distributionManagement>
 </project>
