@@ -1,8 +1,8 @@
 package com.utechworld.bms.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.nacos.api.config.annotation.NacosValue;
-import com.utechworld.neuroape.common.result.ResultJSON;
+import com.github.pagehelper.PageInfo;
+import com.utechworld.neuroape.common.result.Result;
+import com.utechworld.neuroape.common.result.ResultPage;
 import com.utechworld.neuroape.service.UserDO;
 import com.utechworld.neuroape.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,79 +43,43 @@ public class TestController {
 
         return  "--d--"+host;
     }
-    @RequestMapping(value = "refresh")
-    public String refresh (HttpServletRequest request){
-        refresh();
-        return "refresh";
-    }
-    //    service服务
-    @RequestMapping("/hello")
-    public String index(@RequestParam String name) {
-        return "hello "+name+"，this is first messge";
-    }
-    /**
-     * 刷新配置中心
-     */
-    public static void refresh() {
-
-        HttpURLConnection connection =null;
-        try {
-            URL url = new URL("http://localhost:8763/refresh");//配置中心客户端刷新
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            connection.connect();//链接
-            InputStream in=connection.getInputStream();//等待响应
-            in.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-            if(connection!=null){
-                connection.disconnect();
-            }
-        }
-    }
 
     /**
      * 1.分页查询
      * @return
      */
-    @RequestMapping(value = "users/{pageNo}/{pageSize}", method = RequestMethod.GET)
-    public ResponseEntity getUserList (@PathVariable Integer pageNo, @PathVariable Integer pageSize){
-        String search = "";
-        JSONObject jsonObject  = userService.selectAll(pageNo,pageSize,search);
-        return ResponseEntity.ok(jsonObject);
+    @RequestMapping(value = "users/{pageNo}/{pageSize}/{search}", method = RequestMethod.GET)
+    public ResultPage getUserList (@PathVariable Integer pageNo, @PathVariable Integer pageSize,@PathVariable String search){
+        PageInfo page = userService.selectAll(pageNo,pageSize,search);
+        return ResultPage.ok(page.getList(),page.getPageNum(),page.getPageSize(),page.getTotal());
     }
     /**
      * 2.批量插入
      * @return
      */
     @RequestMapping(value = "add-all")
-    public ResponseEntity<ResultJSON> addAll (){
-        ResultJSON resultJSON = new ResultJSON();
-
+    public Result addAll (){
         try {
             List<UserDO> list=new ArrayList<UserDO>();
             for(int i=0;i<3;i++){
                 UserDO user=new UserDO();
                 user.setUserId(92132385+i);
                 user.setLibraryId(33333);
-                user.setNickName("李批量插入"+i);
-                user.setUserName("李22"+i);
+                user.setNickName("nacos松"+i);
+                user.setUserName("nacos松"+i);
                 list.add(user);
             }
             List<Integer> idList=userService.insertAll(list);
-            resultJSON.setData(idList);
+           return Result.ok(idList);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(resultJSON);
+        return Result.fail();
     }
 
     /** 3.插入 */
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public ResponseEntity<ResultJSON> add (UserDO user){
-        ResultJSON resultJSON = new ResultJSON();
+    public Result add (UserDO user){
         user.setUserId(92132384);
         user.setLibraryId(33333);
         user.setNickName("李新东方用户");
@@ -126,58 +87,55 @@ public class TestController {
         try {
             Integer id=userService.insert(user);
             user.setId(id);
-            resultJSON.setData(user);
+            Result.ok(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(resultJSON);
+        return Result.fail();
     }
 
     /** 4.主键查询 */
     @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<ResultJSON> getUserById (@PathVariable(value = "id") Integer id){
-        ResultJSON resultJSON = new ResultJSON();
+    public Result getUserById (@PathVariable(value = "id") Integer id){
         try {
             UserDO user = userService.selectById(id);
-            resultJSON.setData(user);
+            Result.ok(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(resultJSON);
+        return Result.fail();
     }
     /** 6.更新对象 */
     @RequestMapping(value = "update/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<ResultJSON> update (@PathVariable(value = "userId") Integer userId){
-        ResultJSON resultJSON = new ResultJSON();
+    public Result update (@PathVariable(value = "userId") Integer userId){
         try {
             UserDO user = new UserDO();
             user.setUserId(userId);
             user.setNickName("李批量插入-更新");
             Integer num=userService.update(user);
-            resultJSON.setData(num);
+            Result.ok(num);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(resultJSON);
+        return Result.fail();
     }
     /** 7. 删除*/
     @RequestMapping(value = "delete")
-    public ResponseEntity<ResultJSON> delete ( ){
-        ResultJSON r = new ResultJSON();
+    public Result delete ( ){
         try {
             List<Integer> idList=new ArrayList<Integer>();
             idList.add(92132385);
             idList.add(92132386);
             Integer num= userService.delete(idList);
-            r.setData(num);
+            Result.ok(num);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(r);
+        return Result.fail();
     }
     @RequestMapping(value = "/redis")
     @ResponseBody
-    public List<Integer> redisTest(){
-        return userService.redisTest();
+    public Result redisTest(){
+        return Result.ok(userService.redisTest());
     }
 }

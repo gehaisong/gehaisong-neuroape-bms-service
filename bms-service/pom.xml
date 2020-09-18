@@ -10,6 +10,7 @@
 	<groupId>com.utechworld</groupId>
 	<artifactId>bms-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>bms-service</name>
 	<description>bms-service project for Spring Boot</description>
 
@@ -24,7 +25,6 @@
 			<groupId>com.utechworld</groupId>
 			<artifactId>neuroape-api</artifactId>
 			<version>1.0-SNAPSHOT</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -58,8 +58,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<!-- redis begin-->
 		<dependency>
@@ -116,19 +117,9 @@
 			<artifactId>spring-boot-starter-log4j</artifactId>
 			<version>1.3.8.RELEASE</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>com.alibaba.cloud</groupId>-->
-<!--			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
-<!--			<version>2.1.1.RELEASE</version>-->
-<!--		</dependency>-->
 		<dependency>
-			<groupId>com.alibaba.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-			<version>2.1.1.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba.cloud</groupId>
-			<artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -150,13 +141,21 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
+	<!-- 依赖包发布到私服，将开发的包上传到宿主仓库-->
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<name>gehaisong</name>
+			<url>http://10.10.10.201:8081/repository/ylw-hosted/</url>
+		</repository>
+	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
 		</plugins>
 	</build>
 

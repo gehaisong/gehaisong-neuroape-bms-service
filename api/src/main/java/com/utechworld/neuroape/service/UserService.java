@@ -2,15 +2,13 @@ package com.utechworld.neuroape.service;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
-
-//import org.springframework.stereotype.Service;
 
 /**
  * Created by gehaisong
  */
-//@Service
 public interface UserService {
     public Integer insert(UserDO personDO);
     public Integer update(UserDO personDO);
@@ -22,7 +20,7 @@ public interface UserService {
      * @param pageSize
      * @return
      */
-    JSONObject selectAll(Integer page, Integer pageSize, String search);
+    PageInfo selectAll(Integer page, Integer pageSize, String search);
 
     /**
      * 批量插入
